@@ -1,0 +1,230 @@
+Source:
+https://youtu.be/rki0eVGAVTQ?si=RE7t2-i9CB5z3MHF
+
+=============================================================================
+Kritik UMKM: Aplikasi Ulasan Kuliner UMKM
+
+1. Project requirements and goals
+2. Domain objects and their relationships
+3. User interface design and flows
+4. System architecture and components
+5. REST API design and endpoints
+
+Project Summary
+- Discover local restaurants
+- Read authentic reviews from other diners
+- Share their own dining experiences through detailed reviews and ratings
+
+The platform will help users make informed decisions about where to eat by providing comprehensive restaurant
+
+
+Technical Considerations
+From the requirements, we can identify several technical aspects we'll need to implement:
+- Geospatial functionality for restaurant location
+- Image upload and display
+- User authentication
+- Review management system
+- Sorting and filtering capabilities
+- Business logic for review submission and editing
+
+Project Focus
+This implementation will particularly focus on search functionality through Elasticsearch integration, including:
+- Fuzzy search capabilities
+- Geospatial search techniques
+
+Summary
+- Platform enables restaurant discovery and reviews
+- Implements core features: search, auth (Keycloak), and image handling
+- Focuses on advanced search functionality
+- Includes geospatial capabilities
+- Provides comprehensive review management
+
+Keycloak:
+Keycloak adalah solusi open-source untuk manajemen identitas dan akses yang menyediakan fitur autentikasi dan otorisasi (Login Autentikasi dan Authorization). Berikut adalah poin-poin penting yang harus Anda pahami untuk menggunakan Keycloak secara efektif:
+
+a. Realm (Security configuration logic)
+Realm merupakan batasan keamanan logis dalam Keycloak. Setiap realm memiliki koleksi pengguna, peran, dan klien yang terpisah. Dalam implementasi, Anda bisa membuat realm terpisah untuk lingkungan development, testing, dan production.
+
+b. Client
+Klien adalah aplikasi (misalnya, aplikasi Spring Boot Anda) yang mengandalkan Keycloak untuk autentikasi dan otorisasi. Anda perlu mendaftarkan aplikasi Anda sebagai client di Keycloak dan mengkonfigurasikan redirect URL, protokol (biasanya OpenID Connect), dan pengaturan lainnya.
+
+c. Roles & Groups:
+Peran (roles) digunakan untuk mendefinisikan level akses. Anda bisa menetapkan peran langsung ke pengguna atau melalui grup. Ini berguna untuk mengatur hak akses dalam aplikasi Anda secara granular.
+
+d. User Federation & Identity Brokering:
+Keycloak mendukung integrasi dengan penyedia identitas eksternal (seperti LDAP atau penyedia sosial seperti Google) untuk memudahkan proses autentikasi. Ini memungkinkan integrasi tanpa harus membuat sistem manajemen pengguna dari nol.
+
+
+
+Integrasi Keycloak dengan Spring Boot:
+a. Adapter dan Spring Security:
+Keycloak menyediakan adapter khusus untuk Spring Boot yang memudahkan integrasi. Anda dapat menggunakan library seperti spring-boot-starter-keycloak atau mengonfigurasi Spring Security untuk berkomunikasi dengan server Keycloak.
+
+b. Konfigurasi:
+- application.properties/yaml: Anda akan memasukkan konfigurasi seperti URL server Keycloak, realm, dan client-id.
+- Security Configuration: Pada kelas konfigurasi Spring Security, Anda dapat mengatur aturan keamanan (misalnya, endpoint mana yang memerlukan autentikasi) dan mendefinisikan bagaimana token dari Keycloak divalidasi.
+
+c. Flow Autentikasi:
+Ketika pengguna mengakses aplikasi, mereka diarahkan ke halaman login Keycloak. Setelah berhasil login, Keycloak mengeluarkan token (ID token dan access token) yang kemudian dipakai oleh aplikasi Anda untuk mengotorisasi akses dan menentukan peran pengguna.
+
+
+Manajemen dan Deployment
+a. Admin Console:
+Keycloak menyediakan antarmuka admin web yang intuitif untuk mengelola realm, klien, pengguna, dan peran. Anda bisa melakukan manajemen pengguna, reset password, dan memonitor log aktivitas.
+
+
+Elasticsearch
+Elasticsearch adalah mesin pencari dan analitik terdistribusi yang banyak digunakan untuk pencarian full-text, analisis log, dan berbagai aplikasi analitik data.
+
+1. Arsitektur dan Konsep Utama
+a. Cluster dan Node:
+Elasticsearch berjalan dalam sebuah cluster yang terdiri dari beberapa node (server). Cluster memberikan redundansi dan skalabilitas. Node dapat berperan sebagai master, data node, atau client node, tergantung pada konfigurasi dan kebutuhan beban kerja.
+
+b. Index, Document, dan Field:
+- Index: Sebuah koleksi dokumen yang memiliki karakteristik serupa, mirip dengan database dalam sistem RDBMS.
+- Document: Unit dasar data dalam Elasticsearch, disimpan dalam format JSON.
+- Field: Setiap dokumen terdiri dari field yang menyimpan informasi spesifik. Field dapat diindeks agar pencarian menjadi cepat dan efisien.
+
+c. Shards dan Replicas:
+Untuk meningkatkan performa dan ketersediaan, index dipecah menjadi beberapa shard. Masing-masing shard dapat memiliki replika untuk memastikan data tetap tersedia jika terjadi kegagalan node.
+
+2. Penggunaan dalam Project Spring Boot
+a. Integrasi dengan Spring Data Elasticsearch:
+Spring Boot menyediakan modul Spring Data Elasticsearch yang menyederhanakan operasi CRUD dan query. Anda cukup mendefinisikan repository interface untuk melakukan indexing, pencarian, dan agregasi data.
+
+b. Query DSL:
+Elasticsearch menggunakan JSON-based Domain Specific Language (DSL) untuk pencarian. Anda bisa membangun query yang kompleks, misalnya pencarian fuzzy, match, term, dan boolean query untuk memfilter dan mengurutkan hasil.
+
+c. Indexing Data:
+Untuk mengindeks data, Anda perlu:
+- Membuat mapping untuk mendefinisikan struktur dokumen (opsional, karena Elasticsearch bersifat schema-less).
+- Menggunakan API indexing (misalnya, melalui repository Spring Data) untuk memasukkan dokumen ke dalam index.
+
+d. Analitik dan Agregasi:
+Elasticsearch juga mendukung agregasi data yang memungkinkan analisis statistik seperti penghitungan, rata-rata, dan distribusi data secara real-time.
+
+
+3. Best Practices dan Manajemen
+a. Monitoring dan Scaling:
+Karena Elasticsearch sangat bergantung pada konfigurasi cluster, penting untuk memonitor kesehatan cluster, penggunaan resource, dan latensi pencarian. Tools seperti Kibana atau Elastic Stack (ELK) sering digunakan untuk tujuan ini.
+
+b. Backup dan Recovery:
+Pastikan untuk mengatur snapshot dan backup secara berkala untuk menghindari kehilangan data
+
+c. Penggunaan Query yang Efisien:
+Rancang query dengan efisien untuk menghindari beban berlebih pada cluster. Gunakan filter dan paginasi saat mengambil data dalam jumlah besar.
+
+
+
+Core Domain Objects
+1. User
+The User object represents registered users of the platform. We're keeping this minimal since authentication will be
+- Basic identification (ID, name, email)
+- Can create restaurants (as an owner)
+- Can write reviews for restaurants
+
+2. Restaurant
+The Restaurant entity is central to our platform:
+- Core details (name, cuisine type, contact information)
+- Average rating (calculated from reviews)
+- Contains complex nested objects: 
+	- Address (including geolocation)
+	- Operating hours
+	- Photos
+	- Reviews
+
+3. Review
+- Written content
+- Numerical rating (1-5 stars)
+- Metadata (author, posting date, last edit date)
+- Can include multiple photos
+- Editable within 48 hours of posting
+
+4. Address
+- Structured representation of location
+- Contains street number, street name, unit, city, state, postal code
+	- Includes geolocation data (latitude/longitude) for mapping
+
+5. Operating Hours
+- Structured as daily time ranges
+- Separate open/close times for each day of the week
+- Allows for different schedules per day
+
+6. Photo
+- URL to stored image
+- Additional metadata (caption, upload date)
+- Can be associated with restaurants or reviews
+
+
+Domain Relationships
+
+1. User-Restaurant:
+- Users can create restaurants (as owners)
+- One user can create multiple restaurants
+- Each restaurant has one owner
+
+2. User-Review:
+- Users write reviews
+- One user can write multiple reviews
+- Each review has one author
+
+3. Restaurant-Review:
+- Restaurants contain reviews
+- One restaurant can have multiple reviews
+- Each review belongs to one restaurant
+
+4. Complex Object Relationships:
+- Restaurant contains one Address
+- Address contains one GeoLocation
+- Restaurant contains one OperatingHours
+- OperatingHours contains seven TimeRange objects (one per day)
+- Reviews can contain multiple Photos
+
+
+Elasticsearch Considerations
+- Restaurant will be a top-level document
+- Other objects (Address, Reviews, Photos, etc.) will be nested within these documents
+- This structure optimizes for search operations while maintaining relationship integrity
+
+
+Dependencies:
+1. OAuth2 Resource Server Security
+Spring Boot integration for Spring Security's OAuth2 resource server features.
+
+Dependensi tersebut memberikan ruang untuk layanan autentikasi open source seperti Keycloak
+
+[34:44]
+
+
+[45:10]
+Kibana setup di localhost;5601 or local server
+
+1. Go to Daftar Menu bagian Management untuk opsi 'Stack Management'
+2. Lalu pada menu kiri pilih 'Index Management'
+	- disini kita menemukan elastic search indexes (list tabel database)
+	- nanti java akan bikin index secara otomatis, sama seperti @Table
+	- 
+
+3. Nanti pada Kibana setup Elasticsearch akan memiliki dua Index:
+	- User
+	- Restaurant
+
+tambahkan konfigurasi ke properties untuk menandkaan uris dari elastic search
+
+
+[50:10] Set up and Running KeyCloak
+1. Nanti kita bakal add Realms (semacam logic untuk spring security), caranya klik 'Create realm' pada drop down 'master' dan kasih nama 'kritik-umkm', turn on field 'Enabled'
+
+Jadi Realms seperti tenant yanng memiliki konfiguraasi spesifik untuk aplikasi kritik umkm.
+
+tambahkan konfigurasi properties untuk jwt uris menggunakan keycloak dengan NAMA realms sebelumnya
+
+
+
+Set Up Mapstruct
+For handling object mapping diantara layer-layer dari Spring lifecycle dan pastikan berjalan dengan Lombok.
+
+Di pom.xml pastiin versi Lombok dan Mapstruct bekerja dengan benar
+
+
+[54:03]
