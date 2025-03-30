@@ -228,3 +228,90 @@ Di pom.xml pastiin versi Lombok dan Mapstruct bekerja dengan benar
 
 
 [54:03]
+
+Elastic: http://localhost:5601/
+ElasticSearch: http://localhost:9200/
+Kibana: http://localhost:5601/
+
+Keycloak: http://localhost:/
+
+
+
+
+Module domain;
+
+1. Bikin elasticsearch entity for User
+2. Bikin elasticsearch entity for Alamat
+3. Bikin elasticsearch entity for Jam Operasi
+	- dan entity Rentang Waktu
+4. Bikin elasticsearch entity for Gambar
+5. Bikin elasticsearch entity for Kritik
+
+Disini kita menggunakan anotasi @Field instead of @Column, karena kita menggunakna database NoSQL yaitu Elasticsearch.
+
+Selain itu kita bisa pilih suatu variabel akan dilakukan searching secara full, parcial, nested, Date. FUll akan search data secara rinci dan langsung.
+
+Sedangkan partial hanya sebagian kata terlebih dahulu.
+
+Lalu nested artinya tipe data Objek dari variabel tersebut dimiliki oleh class sekarang dan berasal dari class sebelumnya. Dengan kata lain "Nested" adalah cara untuk menghubungkan relasi antar dua kelas. Hampir sama kayak @ManyToOne, dan lain-lain.
+
+Sedangkan jika Date artinya menandakan itu adalah waktu dan perlu tambah parameter format bagaimana waktu ditampilkan, karena LocalDateTime terdiri dari objek Date dan Time
+
+Terakhir yaitu Entitas untuk Umkm (atau Restaurant), disini anotasinya selain @Data juga menandakan bahwa entitas tersebut merupakan sebuah @Document pada Elasticsearch (seperti tabel di rdbms).
+
+Kenapa cuma entity Umkm aja yang ada anotasi @Document? Karena class ini memiliki relasi / Nested terhadap berbagai entitas lainnya.
+
+Repository on Umkm inherence from Elasticsearch
+
+
+
+Authentication
+- menggunakan Keycloak sebagai indentity provider
+
+1. Create user in Keycloak
+2. Konfigurasi OAauth2 resource server in spring boot app. Sehingga user dari keycloak yang terautentikasi bisa berinteraksi dengan aplikasi
+
+
+
+
+1. Create User (Authentication)
+- make sure sekarang lagi di 'kritik-umkm' Keycloak realms
+- Masuk ke halaman Users > Add user > Isi username, email, first dan last name (bebas yang penting ada testnya, untuk nandain) > Create
+- Pada detail user, pilih navbar 'Credential > Set Password > 'testpassword' > temporary = 'off'.
+- 
+
+
+2. Create Security Config (Authentication)
+- protect endpoints
+- validate access tokens
+
+Look carefully on `package com.roniantonius.kritikumkm.config.SecurityConfig`
+- app require all endpoint to be authenticated
+- setup stateless session management for Rest API
+- enabled JWT token validation with keycloak
+
+
+
+
+Gambar Upload:
+- store and retrieves Gambar
+
+1. file storage design di Spring
+	- design interface for storing and retriving files
+	- custom error handling exception for file storage
+	- implement core file storage operations
+	- build 'Services' for upload and retrive Gambar
+	- create DTO dan Mappers
+
+Gambar Upload feature:
+- saving files to Server disk
+
+- Create services for Storage, main functionality to store and load a files/resource.
+
+*note:
+Multipartfile adalaah format dari Spring boot ketika kita upload file.
+
+
+
+Storing Files:
+[1:40:52]
