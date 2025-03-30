@@ -315,3 +315,24 @@ Multipartfile adalaah format dari Spring boot ketika kita upload file.
 
 Storing Files:
 [1:40:52]
+
+- Create implement of Storage Service
+	- Where file disimpan?
+	- dan disimpan dengan cara Copy melalui InputStream
+
+
+- Retrieving Files
+
+
+
+Uploading and Retrieving Gambars;
+- Create a specific Service untuk melakukan upload dan mengambil gambar.
+
+Gambar Dto dan Mapper
+
+
+Gambar Upload Endpoint @Postmapping
+
+
+
+Next Error Handling [2:10:23]
