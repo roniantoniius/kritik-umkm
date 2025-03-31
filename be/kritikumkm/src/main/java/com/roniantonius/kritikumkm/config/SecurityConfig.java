@@ -2,6 +2,7 @@ package com.roniantonius.kritikumkm.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -15,7 +16,10 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
 			.authorizeHttpRequests(auth -> 
-					auth.anyRequest().authenticated()
+					auth
+						.requestMatchers(HttpMethod.GET, "/api/photos/**").permitAll()
+						.requestMatchers(HttpMethod.GET, "/api/restaurants/**").permitAll()
+						.anyRequest().authenticated()
 			)
 			
 			// an authentication will handle token from Keycloak to create authenticated user

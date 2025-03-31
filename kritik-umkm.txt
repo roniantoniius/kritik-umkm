@@ -1,6 +1,10 @@
 Source:
 https://youtu.be/rki0eVGAVTQ?si=RE7t2-i9CB5z3MHF
 
+
+Kalau mau run aplikasi (serius): run setiap image docker
+- Bikin dulu id dan pass test user di Keycloak
+- Jalanin Junit tewsting pada UmkmDataLoaderTest
 =============================================================================
 Kritik UMKM: Aplikasi Ulasan Kuliner UMKM
 
@@ -336,3 +340,88 @@ Gambar Upload Endpoint @Postmapping
 
 
 Next Error Handling [2:10:23]
+
+
+Gambar Retrieval Endpoint
+	- Make sure that get Gambar is already permitAll in Security Config
+	- receive id of the Gambar
+	- Resource that found must be display as gambar in contentType
+	- header with CONTENT_DISPOSITION "inline" so that server just display the image instead of download
+
+
+
+
+Endpoint for Umkm Create:
+1. umkm service
+2. geolocation service
+3. domain object and interface
+4. core business logic and dto
+5. object mapper
+6. controller
+
+
+
+1. Geolocation to Umkm
+Geolocation convert data alamat menjadi data koordinat seperti longlat. dan tentunya perlu domain baru.
+
+Karena lokasi utama pengennya di Jakarta, jadi pada Service yang menerapkan geolocation dengan input objek Alamat kita perlu bikin Bounding box yang mencakup area Jakarta.
+
+
+2. Create Umkm Service
+Karena kita ga bisa pakai entitas Umkm di entities.. KIta bikin domain baru untuk Creaate Update request yang nanti digunakan di presentation/service layer.
+
+- Umkm Service that will use data from UmkmCreateUpdateRequest or as a request to be used as creating a new Umkm entity in persitance.
+
+*request is what user put in their form
+
+
+3. Create Umkm Dto for UKMM Data for Update Request
+Creating Dto for Umkm meaning that we need to implement every Dto to every Object that were using like rentangWaktu, Alamant, JamOperasi, etc into Dto
+
+But first we need to configure the Dto for Umkm Create Update Request
+
+"^([01]?[0-9]|2[0-3]):[0-5][0-9]$"
+
+
+4. Umkm Mappers [2:47:39]
+- Bikin converter dari Dto Request Umkm ke entity Request
+- dari objek Umkm ke Umkm Dto
+- dan dari GeoPoint ke GeoPoint Dto
+
+5. Create Umkm Controller 
+- Create / Post
+
+
+6. Import Test Data for Umkm Create [3:00:58]
+
+
+
+
+
+
+Umkm Search;
+User able to find umkm berdasarkan namanya
+- repository for custom elastic search queries
+- service layer for which queries will be used
+- dto and mapper
+- rest api controller
+
+
+
+1. Umkm search repository
+	- user bisa cari umkm berdasarkan tipe konsumsi, rating, dan lokasi
+	- menggunakan @Query dari elasticsearch, kita bisa cari Umkm berdasarkan rataRating dan tipeKonsumsi
+	- @Query menfcari umkm berdasarkan Geo Location dengan radius 2km menggunakan input latitude dan longitude
+
+2. Umkm Search Service
+- using repository method untuk functionality dalam controller
+- dto and mapper for umkm search
+
+3. Umkm Search Controller
+- accessible for everyone (security config needed)
+
+Testing search functionality on based name and tipe konsumsi dan berdasarkan lokasi (longlat).
+
+Untuk melihat daftar lengkap dari restaurant, kita sebenarnya bisa query langsung di kibana elastic search ya.
+
+Kita pastiiin api dari search berdasarkan lokasi di postman dan jangan lupa isi dari request param.
