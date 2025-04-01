@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.roniantonius.kritikumkm.domain.dtos.ErrorDto;
 import com.roniantonius.kritikumkm.exceptions.BaseException;
+import com.roniantonius.kritikumkm.exceptions.KritikNotAllowedException;
 import com.roniantonius.kritikumkm.exceptions.StorageException;
+import com.roniantonius.kritikumkm.exceptions.UmkmNotFoundException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -73,5 +75,29 @@ public class ErrorController {
 				.build();
 		
 		return new ResponseEntity<>(errorDto, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@ExceptionHandler(UmkmNotFoundException.class)
+	public ResponseEntity<ErrorDto> handleUmkmNotFoundException(UmkmNotFoundException ex){
+		log.error("CAught Umkm not found unexpected exception error", ex);
+		
+		ErrorDto errorDto = ErrorDto.builder()
+				.status(HttpStatus.NOT_FOUND.value())
+				.message("An specified umkm was not found")
+				.build();
+		
+		return new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(KritikNotAllowedException.class)
+	public ResponseEntity<ErrorDto> handleKritikNotAllowedException(KritikNotAllowedException ex){
+		log.error("CAught KritikNotAllowedException", ex);
+		
+		ErrorDto errorDto = ErrorDto.builder()
+				.status(HttpStatus.BAD_REQUEST.value())
+				.message("An specified kritik cannot created or updated")
+				.build();
+		
+		return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
 	}
 }

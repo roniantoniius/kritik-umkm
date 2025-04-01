@@ -3,8 +3,11 @@ package com.roniantonius.kritikumkm.controllers;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,4 +55,24 @@ public class UmkmController {
     	Page<Umkm> umkms = umkmService.searchUmkms(q, minRating, latitude, longitude, radius, PageRequest.of(page, size));
     	return umkms.map(umkmMapper::toSummaryDto);
     };
+    
+    @GetMapping(path = "/{restaurant_id}")
+    public ResponseEntity<UmkmDto> getUmkm(@PathVariable("restaurant_id") String umkmId){
+		return umkmService.getUmkm(umkmId)
+				.map(umkm -> ResponseEntity.ok(umkmMapper.toUmkmDto(umkm)))
+				.orElse(ResponseEntity.notFound().build());
+    }
+    
+    @PutMapping(path = "/{restaurant_id}")
+    public ResponseEntity<UmkmDto> updateUmkm(@PathVariable("restaurant_id") String umkmId, @Valid @RequestBody UmkmCreateUpdateRequestDto requestDto){
+		UmkmCreateUpdateRequest request = umkmMapper.toUmkmCreateUpdateRequest(requestDto);
+		Umkm umkm = umkmService.updateUmkm(umkmId, request);
+		return ResponseEntity.ok(umkmMapper.toUmkmDto(umkm));
+    }
+    
+    @DeleteMapping(path = "/{restaurant_id}")
+    public ResponseEntity<Void> deleteUmkm(@PathVariable("restaurant_id") String umkmId){
+    	umkmService.deleteUmkm(umkmId);
+    	return ResponseEntity.noContent().build();
+    }
 }

@@ -10,20 +10,17 @@ import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 
 import com.roniantonius.kritikumkm.domain.UmkmCreateUpdateRequest;
 import com.roniantonius.kritikumkm.domain.dtos.GeoPointDto;
-import com.roniantonius.kritikumkm.domain.dtos.JamOperasiDto;
 import com.roniantonius.kritikumkm.domain.dtos.UmkmCreateUpdateRequestDto;
 import com.roniantonius.kritikumkm.domain.dtos.UmkmDto;
 import com.roniantonius.kritikumkm.domain.dtos.UmkmSummaryDto;
-import com.roniantonius.kritikumkm.domain.dtos.UserDto;
-import com.roniantonius.kritikumkm.domain.entities.JamOperasi;
 import com.roniantonius.kritikumkm.domain.entities.Kritik;
 import com.roniantonius.kritikumkm.domain.entities.Umkm;
-import com.roniantonius.kritikumkm.domain.entities.User;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UmkmMapper {
 	UmkmCreateUpdateRequest toUmkmCreateUpdateRequest(UmkmCreateUpdateRequestDto dto);
 	
+	@Mapping(source = "kritiks", target = "totalKritiks", qualifiedByName = "populateTotalKritiks")
 	UmkmDto toUmkmDto(Umkm umkm);
 
 	// dua method ini belum mandatory
@@ -34,7 +31,7 @@ public interface UmkmMapper {
 	@Mapping(target = "longitude", expression = "java(geoPoint.getLon())")
 	GeoPointDto toGeoPointDto(GeoPoint geoPoint);
 	
-	// method for search umkm
+	// method used for search umkm on summary (ringkasan) dari detail suatu Umkm
 	@Mapping(source = "kritiks", target = "totalKritiks", qualifiedByName = "populateTotalKritiks")
 	UmkmSummaryDto toSummaryDto(Umkm umkm); // source diambil dari variabel di constructor, dan target dari variabel output
 	

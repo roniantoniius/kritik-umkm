@@ -1,5 +1,7 @@
 package com.roniantonius.kritikumkm.services;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -18,4 +20,9 @@ public interface UmkmService {
 			Float radiusKm,
 			Pageable pageable
 	);
+	
+	Optional<Umkm> getUmkm(String id);
+	Umkm updateUmkm(String id, UmkmCreateUpdateRequest request);
+	
+	void deleteUmkm(String id);
 }

@@ -34,4 +34,6 @@ public class UmkmDto {
 	private List<KritikDto> kritiks = new ArrayList<>();
 	
 	private UserDto dibuatOleh;
+	
+	private Integer totalKritiks;
 }

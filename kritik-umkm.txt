@@ -425,3 +425,80 @@ Testing search functionality on based name and tipe konsumsi dan berdasarkan lok
 Untuk melihat daftar lengkap dari restaurant, kita sebenarnya bisa query langsung di kibana elastic search ya.
 
 Kita pastiiin api dari search berdasarkan lokasi di postman dan jangan lupa isi dari request param.
+
+
+
+
+
+Module Umkm Retrieve by id:
+- digunakan ketika ingin melihat detail dari umkm
+- bikin service untuk lookups detail
+- bikin rest api endpoint
+- test di ui
+
+
+
+Modul Umkm update:
+- service update functionality
+- error handling if umkm doesnt exist
+- impl service layer
+- controller: api endpoint
+
+1. Functionality mirip seperti createUmkm yaitu menggunakan Dto untuk Create Update Request
+
+
+
+Modul Delete Umkm:
+
+
+
+
+Module Create Kritik
+- design Kritik create
+- exception handling for Kritik yang tidak diperbolehkan (jika user udah pernah nulis review)
+- service layer for create Kritik
+- Dto dan Mapper
+- Controller endpoint
+
+1. Design Kritik Create
+Biasanya kita bikin sebuah @Data yang mewakili Request untuk proses Create dan Update atau lebih ke sebuah objek yang menampung data dari Form di frontend.
+
+
+[4:14:47]
+
+Kritik Create Dto dan Controller
+
+Intinya di Controller ini memanfkaatkan fungsionalitas create Kritik pada service yang memerlukan constructor objek User sebagai author, string id dari umkm, dan data request.
+
+Sehingga pada controller kita memerlukan input dengan objek Jwt (dari Oauth yang digunakan pada keycloak di elastic) dengan anotasi @AuthenticationPrincipal.
+
+Jadi perlu convert dari objek 'Jwt' menjadi objek 'User'.
+
+
+
+
+Module Kritik List:
+- list kritik service layer
+- api endpoint for listing Kritiks based on umkmId
+
+Daftar Kritik service:
+- ambil objek untuk Umkm dan daftar dari Kritik berdasarakan umkmIds
+- ambil informasi storting dengan getSort() pada pageable dan simpan pada variabel baru yaitu bertipa Sort.
+
+
+## Manual paagination karena Kritik itu diambil dari 'dokumen' elastic yaitu Umkm
+- Periksa apkah sorting sudah dicustom atau belum
+- Jika belum:
+	- ammbil item pertama hasil sorting
+	- ekstrak property nama untuk diurutkan berdasarkan suatu instance
+	- tentukan apakh sorting menjadi asc atau desc
+	- bikin objek Comparator dengan tipe Kritik untuk sort berdasrkan spesifik informasi seperti sort review berdasarkan Rating atau waktu terbaru
+	- urutkan ulang list Kritik.
+- Jika sudah:
+	- list dari umkm dengan kategori waktu atau rating using switch case
+	- hitung dan validasi mekanisme dari mulai dan akhir.
+	- 
+
+- kustomisasi pagination mulai dari pengurutan (asc, desc) melalui Sort.Order
+
+[4:46:56] Module Kritik Retrieve

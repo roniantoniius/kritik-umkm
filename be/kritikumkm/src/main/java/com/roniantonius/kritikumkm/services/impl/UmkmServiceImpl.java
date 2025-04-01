@@ -2,6 +2,7 @@ package com.roniantonius.kritikumkm.services.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,7 @@ import com.roniantonius.kritikumkm.domain.GeoLocation;
 import com.roniantonius.kritikumkm.domain.UmkmCreateUpdateRequest;
 import com.roniantonius.kritikumkm.domain.entities.Gambar;
 import com.roniantonius.kritikumkm.domain.entities.Umkm;
+import com.roniantonius.kritikumkm.exceptions.UmkmNotFoundException;
 import com.roniantonius.kritikumkm.repositories.UmkmRepository;
 import com.roniantonius.kritikumkm.services.GeoLocationService;
 import com.roniantonius.kritikumkm.services.UmkmService;
@@ -74,5 +76,43 @@ public class UmkmServiceImpl implements UmkmService{
 		
 		// kalau semuanya null kita return semua umkm
 		return umkmRepository.findAll(pageable);
+	}
+
+	@Override
+	public Optional<Umkm> getUmkm(String id) {
+		// TODO Auto-generated method stub
+		return umkmRepository.findById(id);
+	}
+
+	@Override
+	public Umkm updateUmkm(String id, UmkmCreateUpdateRequest request) {
+		// TODO Auto-generated method stub
+		Umkm umkm = getUmkm(id).orElseThrow(() -> new UmkmNotFoundException("Umkm id tidak ditemukan dengan id: " + id));
+		
+		// mengambil GeoLocation objek dari request
+		GeoLocation lokasi = geoLocationService.geoLocate(request.getAlamat());
+		
+		List<String> daftarGambarUrl = request.getGambarIds();
+		List<Gambar> daftarGambars = daftarGambarUrl.stream()
+				.map(urlGambar -> Gambar.builder()
+						.url(urlGambar)
+						.waktuGambarUpload(LocalDateTime.now())
+						.build()).toList();
+		
+		umkm.setNama(request.getNama());
+		umkm.setTipeKonsumsi(request.getTipeKonsumsi());
+		umkm.setInformasiKontak(request.getInformasiKontak());
+		umkm.setGeoLocation(new GeoPoint(lokasi.getLatitude(), lokasi.getLongitude()));
+		umkm.setAlamat(request.getAlamat());
+		umkm.setJamOperasi(request.getJamOperasi());
+		umkm.setGambars(daftarGambars);
+		
+		return umkmRepository.save(umkm);
+	}
+
+	@Override
+	public void deleteUmkm(String id) {
+		// TODO Auto-generated method stub
+		umkmRepository.deleteById(id);
 	}
 }
