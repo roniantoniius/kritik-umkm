@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/api/photos")
+@RequestMapping(path = "/api/gambars")
 public class GambarController {
 	private final GambarService gambarService;
 	private final GambarMapper gambarMapper;

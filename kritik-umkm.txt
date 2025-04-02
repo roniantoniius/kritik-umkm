@@ -501,4 +501,12 @@ Daftar Kritik service:
 
 - kustomisasi pagination mulai dari pengurutan (asc, desc) melalui Sort.Order
 
+
 [4:46:56] Module Kritik Retrieve
+- User bisaa mengambil kritik pribadi mereka
+
+
+
+Module Kritik Update
+- update kritik berdasarkan User dan hanya bisa update deadline 48 jam
+- 

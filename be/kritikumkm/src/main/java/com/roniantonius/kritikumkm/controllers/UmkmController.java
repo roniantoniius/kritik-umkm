@@ -25,7 +25,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping(path = "/api/restaurants")
+@RequestMapping(path = "/api/umkms")
 @RequiredArgsConstructor
 public class UmkmController {
     private final UmkmService umkmService;
@@ -56,22 +56,22 @@ public class UmkmController {
     	return umkms.map(umkmMapper::toSummaryDto);
     };
     
-    @GetMapping(path = "/{restaurant_id}")
-    public ResponseEntity<UmkmDto> getUmkm(@PathVariable("restaurant_id") String umkmId){
+    @GetMapping(path = "/{umkm_id}")
+    public ResponseEntity<UmkmDto> getUmkm(@PathVariable("umkm_id") String umkmId){
 		return umkmService.getUmkm(umkmId)
 				.map(umkm -> ResponseEntity.ok(umkmMapper.toUmkmDto(umkm)))
 				.orElse(ResponseEntity.notFound().build());
     }
     
-    @PutMapping(path = "/{restaurant_id}")
-    public ResponseEntity<UmkmDto> updateUmkm(@PathVariable("restaurant_id") String umkmId, @Valid @RequestBody UmkmCreateUpdateRequestDto requestDto){
+    @PutMapping(path = "/{umkm_id}")
+    public ResponseEntity<UmkmDto> updateUmkm(@PathVariable("umkm_id") String umkmId, @Valid @RequestBody UmkmCreateUpdateRequestDto requestDto){
 		UmkmCreateUpdateRequest request = umkmMapper.toUmkmCreateUpdateRequest(requestDto);
 		Umkm umkm = umkmService.updateUmkm(umkmId, request);
 		return ResponseEntity.ok(umkmMapper.toUmkmDto(umkm));
     }
     
-    @DeleteMapping(path = "/{restaurant_id}")
-    public ResponseEntity<Void> deleteUmkm(@PathVariable("restaurant_id") String umkmId){
+    @DeleteMapping(path = "/{umkm_id}")
+    public ResponseEntity<Void> deleteUmkm(@PathVariable("umkm_id") String umkmId){
     	umkmService.deleteUmkm(umkmId);
     	return ResponseEntity.noContent().build();
     }

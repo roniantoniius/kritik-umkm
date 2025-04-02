@@ -7,9 +7,11 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,7 +28,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping(path = "/api/restaurants/{restaurantId}/reviews")
+@RequestMapping(path = "/api/umkms/{umkmId}/reviews")
 @RequiredArgsConstructor
 public class KritikController {
 	
@@ -57,6 +59,42 @@ public class KritikController {
 	){
 		return kritikService.listKritik(umkmId, pageable).map(kritikMapper::toDto);
 	}
+	
+	@GetMapping(path = "/{kritikId}")
+	public ResponseEntity<KritikDto> getKritik(
+			@PathVariable String umkmId,
+			@PathVariable String kritikId
+	){
+		return kritikService.getKritik(umkmId, kritikId)
+				.map(kritikMapper::toDto)
+				.map(ResponseEntity::ok)
+				.orElseGet(() -> ResponseEntity.noContent().build());
+	}
+	
+	@PutMapping(path = "/{kritikId")
+	public ResponseEntity<KritikDto> updateKritik(
+			@PathVariable String umkmId,
+			@PathVariable String kritikId,
+			@Valid @RequestBody KritikCreateUpdateRequestDto kritikRequestDto,
+			@AuthenticationPrincipal Jwt jwt
+	){
+		KritikCreateUpdateRequest request = kritikMapper.toKritikCreateUpdateRequest(kritikRequestDto);
+		User user = jwtToUser(jwt);
+		Kritik updateKritik = kritikService.updateKritik(user, umkmId, kritikId, request);
+		return ResponseEntity.ok(kritikMapper.toDto(updateKritik));
+	}
+	
+	@DeleteMapping(path = "/{kritikId")
+	public ResponseEntity<Void> deleteKritik(
+			@PathVariable String umkmId,
+			@PathVariable String kritikId,
+			@AuthenticationPrincipal Jwt jwt
+	){
+		User user = jwtToUser(jwt);
+		kritikService.deleteKritik(user, umkmId, kritikId);
+		return ResponseEntity.noContent().build();
+	}
+	
 	
 	private User jwtToUser(Jwt jwt) {
 		return User.builder()
